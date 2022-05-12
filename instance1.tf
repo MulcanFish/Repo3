@@ -1,3 +1,13 @@
+variable "server_port" {
+    description = "The port the server will use for HTTP requests"
+    type = number
+  }
+
+output "public_ip" {
+  value = aws_instance.example.public_ip
+  description = "The public IP of Terraform deployed instance"
+}
+
 resource "aws_instance" "example" {
   ami = "ami-0c55b159cbfafe1f0"
   instance_type = "t2.micro"
@@ -6,7 +16,7 @@ resource "aws_instance" "example" {
   user_data = <<-EOF
             #!/bin/bash
             echo "Hello World!" > index.html
-            nohup busybox httpd -f -p 8080 &
+            nohup busybox httpd -f -p ${var.server_port} &
             EOF
 
   tags = {
